@@ -1,0 +1,30 @@
+#include <cassert>
+
+template <class T>
+priority_queue<T>::priority_queue(){}
+
+template <class T>
+void priority_queue<T>::pop() {
+	h.remove();
+}
+
+template <class T>
+void priority_queue<T>::push (const T& item) {
+	h.push(item);
+}
+
+template <class T>
+bool priority_queue<T>::empty () const {
+	return h.empty();
+}
+
+template <class T>
+typename priority_queue<T>::size_t priority_queue<T>::size() const {
+	return h.size();
+}
+
+template <class T>
+T priority_queue<T>::top() const {
+	assert(!h.empty());
+	h.max();
+}

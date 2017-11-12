@@ -1,0 +1,129 @@
+#include <iostream>
+#include <cstdlib>
+#include <cassert>
+
+template <class T>
+deque<T>::deque() {
+	count = 0;
+	first = 0;
+	last = CAPACITY  - 1;
+}
+
+template <class T>
+T& deque<T>::front() {
+	assert(!empty());
+	return data[first];
+}
+
+template <class T>
+T deque<T>::front() const {
+	assert(!empty());
+	return data[first];
+}
+
+template <class T>
+T& deque<T>::back() {
+	assert(!empty());
+	return data[last];
+}
+
+template <class T>
+T deque<T>::back() const {
+	assert(!empty());
+	return data[last];
+}
+
+template <class T>
+void deque<T>::push_front (const T& entry) {
+	assert(!full());
+	first = prev_index(first);
+	data[first] = entry;
+	count++;
+}
+
+template <class T>
+void deque<T>::push_back (const T& entry) {
+	assert(!full());
+	last = next_index(last);
+	data[last] = entry;
+	count++;
+}
+
+template <class T>
+void deque<T>::pop_front() {
+	assert(!empty());
+	first = next_index(first);
+	count--;
+}
+
+template <class T>
+void deque<T>::pop_back() {
+	assert(!empty());
+	last = prev_index(last);
+	count--;
+}
+
+template <class T>
+typename deque<T>::size_type deque<T>::size() const {
+	return count;
+}
+
+template <class T>
+bool deque<T>::empty() const {
+	if(count == 0) {
+		return true;
+	}
+	return false;
+}
+
+template <class T>
+bool deque<T>::full() const {
+	if (count == CAPACITY) {
+		return true;
+	}
+	return false;
+}
+
+template <typename U>
+bool operator == (const deque<U>& dq1, const deque<U>& dq2) {
+	if (dq1.size() != dq2.size()) {
+		return false;
+	}
+	
+	typename deque<U>::size_type curr_index;
+	curr_index = dq1.first;	
+	
+	for (int i = 0; i < dq1.count; i++ ) {
+		if (dq1.data[curr_index] == dq2.data[curr_index]) { //are the two values at the indexes equal?
+			return false;
+		}
+		curr_index = dq1.next_index(curr_index);
+	}
+
+	return true;
+}
+
+template <typename U>
+std::ostream& operator<< (std::ostream& out, const deque<U>& dq) {
+	typename deque<U>::size_type curr_index = dq.first;	
+	
+	for (int i = 0; i < dq.count; i++) {
+		out << dq.data[curr_index] << " "; 
+		curr_index = dq.next_index(curr_index);
+	}
+	
+	return out;
+}
+
+template <class T>
+typename deque<T>::size_type deque<T>::next_index(size_type i) const {
+	return (i+1) % CAPACITY;
+}
+
+template <class T>
+typename deque<T>::size_type deque<T>::prev_index (size_type i) const {
+	if (i == 0) { //cannot have a negative size_t
+		return CAPACITY - 1;
+	}
+	return (i-1) % CAPACITY;
+}
